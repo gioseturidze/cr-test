@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 
-import '../../data/models/game_model.dart';
+import '../../data/models/game/game_model.dart';
 import '../../data/repositories/games_repository.dart';
 
 abstract class GetGamesUseCaseInterface {

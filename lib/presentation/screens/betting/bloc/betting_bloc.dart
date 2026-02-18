@@ -5,8 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/exceptions/app_exceptions.dart';
-import '../../../../data/models/game_model.dart';
-import '../../../../data/models/odds_model.dart';
+import '../../../../data/models/game/game_model.dart';
+import '../../../../data/models/odds/odds_model.dart';
 import '../../../../domain/services/odds_simulator_interface.dart';
 import '../../../../domain/usecases/get_games_usecase.dart';
 

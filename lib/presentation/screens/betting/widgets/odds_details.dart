@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/odds_model.dart';
+import '../../../../data/models/odds/odds_model.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'odds_badge.dart';
 

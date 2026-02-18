@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
-import '../models/auth_token_model.dart';
-import '../models/user_model.dart';
+import '../models/auth_token/auth_token_model.dart';
+import '../models/user/user_model.dart';
 
 abstract class TokenStorageServiceInterface {
   Future<void> saveToken(AuthTokenModel token);

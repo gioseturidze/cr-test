@@ -1,8 +1,8 @@
 import 'package:injectable/injectable.dart';
 
 import '../../core/exceptions/app_exceptions.dart';
-import '../models/auth_token_model.dart';
-import '../models/user_model.dart';
+import '../models/auth_token/auth_token_model.dart';
+import '../models/user/user_model.dart';
 import '../services/biometric_service.dart';
 import '../services/token_storage_service.dart';
 

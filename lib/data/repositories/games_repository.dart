@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 
-import '../models/game_model.dart';
-import '../models/odds_model.dart';
+import '../models/game/game_model.dart';
+import '../models/odds/odds_model.dart';
 
 abstract class GamesRepository {
   Future<List<GameModel>> getGames();

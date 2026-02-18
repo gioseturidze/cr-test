@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:sports_betting/core/exceptions/app_exceptions.dart';
-import 'package:sports_betting/data/models/user_model.dart';
+import 'package:sports_betting/data/models/user/user_model.dart';
 import 'package:sports_betting/domain/usecases/login_usecase.dart';
 import 'package:sports_betting/domain/usecases/biometric_login_usecase.dart';
 import 'package:sports_betting/domain/usecases/logout_usecase.dart';

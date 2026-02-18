@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/exceptions/app_exceptions.dart';
-import '../../../../data/models/user_model.dart';
+import '../../../../data/models/user/user_model.dart';
 import '../../../../domain/usecases/biometric_login_usecase.dart';
 import '../../../../domain/usecases/login_usecase.dart';
 import '../../../../domain/usecases/logout_usecase.dart';

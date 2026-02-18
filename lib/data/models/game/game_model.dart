@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'odds_model.dart';
+import '../odds/odds_model.dart';
 
 part 'game_model.freezed.dart';
 part 'game_model.g.dart';

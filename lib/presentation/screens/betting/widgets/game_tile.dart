@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/game_model.dart';
-import '../../../../data/models/odds_model.dart';
+import '../../../../data/models/game/game_model.dart';
+import '../../../../data/models/odds/odds_model.dart';
 import 'odds_details.dart';
 
 class GameTile extends StatelessWidget {

@@ -5,7 +5,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/router/app_router.dart';
-import '../../../data/models/odds_model.dart';
+import '../../../data/models/odds/odds_model.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../screens/login/bloc/auth_bloc.dart';
 import 'bloc/betting_bloc.dart';
@@ -122,6 +122,7 @@ class _BettingViewState extends State<_BettingView> {
               return ListView.builder(
                 controller: _scrollController,
                 padding: EdgeInsets.only(
+                  bottom: MediaQuery.viewPaddingOf(context).bottom + 16,
                   top: 8,
                 ),
                 itemCount: games.length,

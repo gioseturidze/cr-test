@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:sports_betting/data/models/game_model.dart';
-import 'package:sports_betting/data/models/odds_model.dart';
+import 'package:sports_betting/data/models/game/game_model.dart';
+import 'package:sports_betting/data/models/odds/odds_model.dart';
 import 'package:sports_betting/l10n/app_localizations.dart';
 import 'package:sports_betting/presentation/screens/betting/widgets/game_tile.dart';
 

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:sports_betting/data/models/odds_model.dart';
+import 'package:sports_betting/data/models/odds/odds_model.dart';
 import 'package:sports_betting/domain/services/odds_simulator_interface.dart';
 
 class MockRandom extends Mock implements Random {}
