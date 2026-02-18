@@ -10,11 +10,13 @@ Clean Architecture with three layers + feature-based presentation:
 lib/
 ├── core/          # DI (get_it + injectable), router (auto_route + AuthGuard), theme, exceptions
 ├── data/          # Models (freezed), repositories (implementations), services
-├── domain/        # Use cases (abstractions + implementations)
+├── domain/        # Use cases + services (abstractions + implementations)
 └── presentation/  # Feature screens with BLoC (events + states via part files)
 ```
 
 Each layer depends only on the one above it: `presentation → domain → data`. All cross-layer dependencies go through abstract interfaces, injected via GetIt.
+
+> Note: abstract interfaces for repositories (`AuthRepository`, `GamesRepository`) are co-located with their implementations in `data/`, so `domain` use cases and services reference `data` abstractions directly.
 
 ## Tech Stack
 
@@ -37,7 +39,7 @@ Each layer depends only on the one above it: `presentation → domain → data`.
 - Persistent session — token + user saved in secure storage, auto-restored on app restart
 - Live betting screen with expandable game tiles (accordion with auto-scroll)
 - Real-time odds simulation every 3 seconds with animated updates (color-coded up/down arrows)
-- Performance optimizations: `buildWhen` on LoginButton, `BlocSelector` for granular error state selection
+- Performance optimizations: `buildWhen` on the login button, `BlocSelector` for granular error state selection
 - Dark theme designed for betting UI
 
 ## Architectural Decisions

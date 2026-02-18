@@ -7,7 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:sports_betting/core/exceptions/app_exceptions.dart';
 import 'package:sports_betting/data/models/game_model.dart';
 import 'package:sports_betting/data/models/odds_model.dart';
-import 'package:sports_betting/data/services/odds_simulator.dart';
+import 'package:sports_betting/domain/services/odds_simulator_interface.dart';
 import 'package:sports_betting/domain/usecases/get_games_usecase.dart';
 import 'package:sports_betting/presentation/screens/betting/bloc/betting_bloc.dart';
 

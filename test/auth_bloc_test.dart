@@ -4,9 +4,9 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:sports_betting/core/exceptions/app_exceptions.dart';
 import 'package:sports_betting/data/models/user_model.dart';
-import 'package:sports_betting/data/repositories/auth_repository.dart';
 import 'package:sports_betting/domain/usecases/login_usecase.dart';
 import 'package:sports_betting/domain/usecases/biometric_login_usecase.dart';
+import 'package:sports_betting/domain/usecases/logout_usecase.dart';
 import 'package:sports_betting/domain/usecases/restore_session_usecase.dart';
 import 'package:sports_betting/presentation/screens/login/bloc/auth_bloc.dart';
 
@@ -16,13 +16,13 @@ class MockBiometricLoginUseCase extends Mock implements BiometricLoginUseCaseInt
 
 class MockRestoreSessionUseCase extends Mock implements RestoreSessionUseCaseInterface {}
 
-class MockAuthRepository extends Mock implements AuthRepository {}
+class MockLogoutUseCase extends Mock implements LogoutUseCaseInterface {}
 
 void main() {
   late MockLoginUseCase mockLoginUseCase;
   late MockBiometricLoginUseCase mockBiometricLoginUseCase;
   late MockRestoreSessionUseCase mockRestoreSessionUseCase;
-  late MockAuthRepository mockAuthRepository;
+  late MockLogoutUseCase mockLogoutUseCase;
 
   const testUser = UserModel(
     id: 'user_1',
@@ -34,14 +34,14 @@ void main() {
     mockLoginUseCase = MockLoginUseCase();
     mockBiometricLoginUseCase = MockBiometricLoginUseCase();
     mockRestoreSessionUseCase = MockRestoreSessionUseCase();
-    mockAuthRepository = MockAuthRepository();
+    mockLogoutUseCase = MockLogoutUseCase();
   });
 
   AuthBloc buildBloc() => AuthBloc(
         loginUseCase: mockLoginUseCase,
         biometricLoginUseCase: mockBiometricLoginUseCase,
         restoreSessionUseCase: mockRestoreSessionUseCase,
-        authRepository: mockAuthRepository,
+        logoutUseCase: mockLogoutUseCase,
       );
 
   group('AuthBloc', () {
@@ -61,6 +61,9 @@ void main() {
       act: (bloc) => bloc.add(const AuthEvent.loginRequested(
         username: 'testuser',
         password: 'password',
+        usernameRequiredError: 'Please enter your username',
+        passwordRequiredError: 'Please enter your password',
+        passwordTooShortError: 'Password must be at least 4 characters',
       )),
       expect: () => [
         const AuthState.loading(),
@@ -78,6 +81,9 @@ void main() {
       act: (bloc) => bloc.add(const AuthEvent.loginRequested(
         username: 'testuser',
         password: 'wrong',
+        usernameRequiredError: 'Please enter your username',
+        passwordRequiredError: 'Please enter your password',
+        passwordTooShortError: 'Password must be at least 4 characters',
       )),
       expect: () => [
         const AuthState.loading(),
@@ -122,14 +128,14 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits [initial] on logout',
       build: () {
-        when(() => mockAuthRepository.logout()).thenAnswer((_) async {});
+        when(() => mockLogoutUseCase()).thenAnswer((_) async {});
         return buildBloc();
       },
       seed: () => const AuthState.authenticated(testUser),
       act: (bloc) => bloc.add(const AuthEvent.logoutRequested()),
       expect: () => [const AuthState.initial()],
       verify: (_) {
-        verify(() => mockAuthRepository.logout()).called(1);
+        verify(() => mockLogoutUseCase()).called(1);
       },
     );
 
@@ -139,6 +145,9 @@ void main() {
       act: (bloc) => bloc.add(const AuthEvent.loginRequested(
         username: '',
         password: 'password',
+        usernameRequiredError: 'Please enter your username',
+        passwordRequiredError: 'Please enter your password',
+        passwordTooShortError: 'Password must be at least 4 characters',
       )),
       expect: () => [
         isA<AuthValidationError>().having(
@@ -155,6 +164,9 @@ void main() {
       act: (bloc) => bloc.add(const AuthEvent.loginRequested(
         username: 'testuser',
         password: '',
+        usernameRequiredError: 'Please enter your username',
+        passwordRequiredError: 'Please enter your password',
+        passwordTooShortError: 'Password must be at least 4 characters',
       )),
       expect: () => [
         isA<AuthValidationError>().having(
@@ -171,6 +183,9 @@ void main() {
       act: (bloc) => bloc.add(const AuthEvent.loginRequested(
         username: 'testuser',
         password: 'ab',
+        usernameRequiredError: 'Please enter your username',
+        passwordRequiredError: 'Please enter your password',
+        passwordTooShortError: 'Password must be at least 4 characters',
       )),
       expect: () => [
         isA<AuthValidationError>().having(

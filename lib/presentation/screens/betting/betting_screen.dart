@@ -35,6 +35,7 @@ class _BettingViewState extends State<_BettingView> {
   static const _expandAnimationDuration = Duration(milliseconds: 300);
   final AutoScrollController _scrollController = AutoScrollController();
   Map<String, OddsModel> _previousOdds = {};
+  final Set<String> _unseenOddsUpdates = {};
   int? _pendingScrollIndex;
 
   @override
@@ -69,6 +70,18 @@ class _BettingViewState extends State<_BettingView> {
       body: BlocConsumer<BettingBloc, BettingState>(
         listener: (context, state) {
           if (state is BettingLoaded) {
+            for (final gameId in state.liveOdds.keys) {
+              final prev = _previousOdds[gameId];
+              final curr = state.liveOdds[gameId];
+              if (prev != null && curr != null && prev != curr) {
+                if (!state.expandedGameIds.contains(gameId)) {
+                  _unseenOddsUpdates.add(gameId);
+                }
+              }
+              if (state.expandedGameIds.contains(gameId)) {
+                _unseenOddsUpdates.remove(gameId);
+              }
+            }
             _previousOdds = state.liveOdds;
             if (_pendingScrollIndex != null) {
               final index = _pendingScrollIndex!;
@@ -126,6 +139,7 @@ class _BettingViewState extends State<_BettingView> {
                       liveOdds: currentOdds,
                       previousOdds: prevOdds,
                       isExpanded: expandedGameIds.contains(game.id),
+                      hasUnseenUpdate: _unseenOddsUpdates.contains(game.id),
                       onToggle: () {
                         if (!expandedGameIds.contains(game.id)) {
                           _pendingScrollIndex = index;

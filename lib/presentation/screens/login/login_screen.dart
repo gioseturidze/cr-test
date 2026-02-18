@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/router/app_router.dart';
 import '../../../l10n/app_localizations.dart';
 import 'bloc/auth_bloc.dart';
-import 'widgets/login_button.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {
@@ -97,10 +96,54 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
-                LoginButton(onPressed: _onLogin),
+                BlocBuilder<AuthBloc, AuthState>(
+                  buildWhen: (prev, curr) =>
+                      (prev is AuthLoading) != (curr is AuthLoading),
+                  builder: (context, state) {
+                    if (state is AuthLoading) {
+                      return const SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: null,
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: (){
+                          context.read<AuthBloc>().add(
+                            AuthEvent.loginRequested(
+                              username: _usernameController.text.trim(),
+                              password: _passwordController.text,
+                              usernameRequiredError: l10n.usernameRequired,
+                              passwordRequiredError: l10n.passwordRequired,
+                              passwordTooShortError: l10n.passwordTooShort,
+                            ),
+                          );
+                        },
+                        child: Text(l10n.signIn),
+                      ),
+                    );
+                  },
+                ),
                 const SizedBox(height: 16),
                 TextButton.icon(
-                  onPressed: _onBiometricLogin,
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                      AuthEvent.biometricLoginRequested(
+                        biometricReason: AppLocalizations.of(context)!.biometricReason,
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.fingerprint),
                   label: Text(l10n.useBiometrics),
                 ),
@@ -110,22 +153,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  void _onLogin() {
-    context.read<AuthBloc>().add(
-          AuthEvent.loginRequested(
-            username: _usernameController.text.trim(),
-            password: _passwordController.text,
-          ),
-        );
-  }
-
-  void _onBiometricLogin() {
-    context.read<AuthBloc>().add(
-          AuthEvent.biometricLoginRequested(
-            biometricReason: AppLocalizations.of(context)!.biometricReason,
-          ),
-        );
   }
 }

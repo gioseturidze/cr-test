@@ -17,16 +17,16 @@ import 'package:sports_betting/core/router/app_router.dart' as _i364;
 import 'package:sports_betting/data/repositories/auth_repository.dart' as _i795;
 import 'package:sports_betting/data/repositories/games_repository.dart'
     as _i573;
-import 'package:sports_betting/data/repositories/mock_games_repository.dart'
-    as _i747;
 import 'package:sports_betting/data/services/biometric_service.dart' as _i68;
-import 'package:sports_betting/data/services/odds_simulator.dart' as _i880;
 import 'package:sports_betting/data/services/token_storage_service.dart'
     as _i367;
+import 'package:sports_betting/domain/services/odds_simulator_interface.dart'
+    as _i224;
 import 'package:sports_betting/domain/usecases/biometric_login_usecase.dart'
     as _i725;
 import 'package:sports_betting/domain/usecases/get_games_usecase.dart' as _i197;
 import 'package:sports_betting/domain/usecases/login_usecase.dart' as _i146;
+import 'package:sports_betting/domain/usecases/logout_usecase.dart' as _i263;
 import 'package:sports_betting/domain/usecases/restore_session_usecase.dart'
     as _i862;
 import 'package:sports_betting/presentation/screens/betting/bloc/betting_bloc.dart'
@@ -42,12 +42,13 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.singleton<_i364.AppRouter>(() => _i364.AppRouter());
-    gh.factoryParam<_i880.OddsSimulatorInterface, _i407.Random?, dynamic>(
-      (random, _) => _i880.OddsSimulator(random: random),
+    gh.factoryParam<_i224.OddsSimulatorInterface, _i407.Random?, dynamic>(
+      (random, _) => _i224.OddsSimulator(random: random),
     );
     gh.lazySingleton<_i367.TokenStorageServiceInterface>(
       () => _i367.TokenStorageService(),
     );
+    gh.lazySingleton<_i573.GamesRepository>(() => _i573.MockGamesRepository());
     gh.factory<_i68.BiometricServiceInterface>(() => _i68.BiometricService());
     gh.lazySingleton<_i795.AuthRepository>(
       () => _i795.AuthRepositoryImpl(
@@ -55,7 +56,15 @@ extension GetItInjectableX on _i174.GetIt {
         tokenStorageService: gh<_i367.TokenStorageServiceInterface>(),
       ),
     );
-    gh.lazySingleton<_i573.GamesRepository>(() => _i747.MockGamesRepository());
+    gh.factory<_i197.GetGamesUseCaseInterface>(
+      () => _i197.GetGamesUseCase(gamesRepository: gh<_i573.GamesRepository>()),
+    );
+    gh.factory<_i944.BettingBloc>(
+      () => _i944.BettingBloc(
+        getGamesUseCase: gh<_i197.GetGamesUseCaseInterface>(),
+        oddsSimulator: gh<_i224.OddsSimulatorInterface>(),
+      ),
+    );
     gh.factory<_i862.RestoreSessionUseCaseInterface>(
       () => _i862.RestoreSessionUseCase(
         authRepository: gh<_i795.AuthRepository>(),
@@ -66,24 +75,18 @@ extension GetItInjectableX on _i174.GetIt {
         authRepository: gh<_i795.AuthRepository>(),
       ),
     );
+    gh.factory<_i263.LogoutUseCaseInterface>(
+      () => _i263.LogoutUseCase(authRepository: gh<_i795.AuthRepository>()),
+    );
     gh.factory<_i146.LoginUseCaseInterface>(
       () => _i146.LoginUseCase(authRepository: gh<_i795.AuthRepository>()),
-    );
-    gh.factory<_i197.GetGamesUseCaseInterface>(
-      () => _i197.GetGamesUseCase(gamesRepository: gh<_i573.GamesRepository>()),
     );
     gh.singleton<_i238.AuthBloc>(
       () => _i238.AuthBloc(
         loginUseCase: gh<_i146.LoginUseCaseInterface>(),
         biometricLoginUseCase: gh<_i725.BiometricLoginUseCaseInterface>(),
         restoreSessionUseCase: gh<_i862.RestoreSessionUseCaseInterface>(),
-        authRepository: gh<_i795.AuthRepository>(),
-      ),
-    );
-    gh.factory<_i944.BettingBloc>(
-      () => _i944.BettingBloc(
-        getGamesUseCase: gh<_i197.GetGamesUseCaseInterface>(),
-        oddsSimulator: gh<_i880.OddsSimulatorInterface>(),
+        logoutUseCase: gh<_i263.LogoutUseCaseInterface>(),
       ),
     );
     return this;

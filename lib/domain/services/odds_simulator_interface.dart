@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:injectable/injectable.dart';
 
-import '../models/odds_model.dart';
+import '../../data/models/odds_model.dart';
 
 abstract class OddsSimulatorInterface {
   Stream<Map<String, OddsModel>> get oddsStream;

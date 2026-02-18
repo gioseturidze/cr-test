@@ -4,9 +4,9 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/exceptions/app_exceptions.dart';
 import '../../../../data/models/user_model.dart';
-import '../../../../data/repositories/auth_repository.dart';
 import '../../../../domain/usecases/biometric_login_usecase.dart';
 import '../../../../domain/usecases/login_usecase.dart';
+import '../../../../domain/usecases/logout_usecase.dart';
 import '../../../../domain/usecases/restore_session_usecase.dart';
 
 part 'auth_bloc.freezed.dart';
@@ -18,17 +18,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCaseInterface _loginUseCase;
   final BiometricLoginUseCaseInterface _biometricLoginUseCase;
   final RestoreSessionUseCaseInterface _restoreSessionUseCase;
-  final AuthRepository _authRepository;
+  final LogoutUseCaseInterface _logoutUseCase;
 
   AuthBloc({
     required LoginUseCaseInterface loginUseCase,
     required BiometricLoginUseCaseInterface biometricLoginUseCase,
     required RestoreSessionUseCaseInterface restoreSessionUseCase,
-    required AuthRepository authRepository,
+    required LogoutUseCaseInterface logoutUseCase,
   })  : _loginUseCase = loginUseCase,
         _biometricLoginUseCase = biometricLoginUseCase,
         _restoreSessionUseCase = restoreSessionUseCase,
-        _authRepository = authRepository,
+        _logoutUseCase = logoutUseCase,
         super(const AuthState.initial()) {
     on<LoginRequested>(_onLoginRequested);
     on<BiometricLoginRequested>(_onBiometricLoginRequested);
@@ -40,11 +40,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LoginRequested event,
     Emitter<AuthState> emit,
   ) async {
-    final usernameError = event.username.isEmpty ? 'Please enter your username' : null;
+    final usernameError = event.username.isEmpty ? event.usernameRequiredError : null;
     final passwordError = event.password.isEmpty
-        ? 'Please enter your password'
+        ? event.passwordRequiredError
         : event.password.length < 4
-            ? 'Password must be at least 4 characters'
+            ? event.passwordTooShortError
             : null;
 
     if (usernameError != null || passwordError != null) {
@@ -85,7 +85,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LogoutRequested event,
     Emitter<AuthState> emit,
   ) async {
-    await _authRepository.logout();
+    await _logoutUseCase();
     emit(const AuthState.initial());
   }
 

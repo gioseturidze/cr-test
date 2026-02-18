@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/exceptions/app_exceptions.dart';
 import '../../../../data/models/game_model.dart';
 import '../../../../data/models/odds_model.dart';
-import '../../../../data/services/odds_simulator.dart';
+import '../../../../domain/services/odds_simulator_interface.dart';
 import '../../../../domain/usecases/get_games_usecase.dart';
 
 part 'betting_bloc.freezed.dart';
@@ -75,12 +75,9 @@ class BettingBloc extends Bloc<BettingEvent, BettingState> {
   ) {
     final currentState = state;
     if (currentState is BettingLoaded) {
-      final expanded = currentState.expandedGameIds.toSet();
-      if (expanded.contains(event.gameId)) {
-        expanded.remove(event.gameId);
-      } else {
-        expanded.add(event.gameId);
-      }
+      final expanded = currentState.expandedGameIds.contains(event.gameId)
+          ? <String>{}
+          : {event.gameId};
       emit(currentState.copyWith(expandedGameIds: expanded));
     }
   }

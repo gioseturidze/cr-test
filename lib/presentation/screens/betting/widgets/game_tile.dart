@@ -9,9 +9,10 @@ class GameTile extends StatelessWidget {
   final OddsModel liveOdds;
   final OddsModel? previousOdds;
   final bool isExpanded;
+  final bool hasUnseenUpdate;
   final VoidCallback onToggle;
 
-  const GameTile({super.key, required this.game, required this.liveOdds, this.previousOdds, required this.isExpanded, required this.onToggle});
+  const GameTile({super.key, required this.game, required this.liveOdds, this.previousOdds, required this.isExpanded, this.hasUnseenUpdate = false, required this.onToggle});
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +62,16 @@ class GameTile extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(width: 8),
+                  if (hasUnseenUpdate && !isExpanded)
+                    Container(
+                      width: 8,
+                      height: 8,
+                      margin: const EdgeInsets.only(right: 6),
+                      decoration: BoxDecoration(
+                        color: colorScheme.tertiary,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
                   AnimatedRotation(turns: isExpanded ? 0.5 : 0, duration: const Duration(milliseconds: 200), child: const Icon(Icons.expand_more)),
                 ],
               ),

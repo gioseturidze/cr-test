@@ -125,10 +125,10 @@ return checkAuthStatus(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String username,  String password)?  loginRequested,TResult Function( String biometricReason)?  biometricLoginRequested,TResult Function()?  logoutRequested,TResult Function()?  checkAuthStatus,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String username,  String password,  String usernameRequiredError,  String passwordRequiredError,  String passwordTooShortError)?  loginRequested,TResult Function( String biometricReason)?  biometricLoginRequested,TResult Function()?  logoutRequested,TResult Function()?  checkAuthStatus,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case LoginRequested() when loginRequested != null:
-return loginRequested(_that.username,_that.password);case BiometricLoginRequested() when biometricLoginRequested != null:
+return loginRequested(_that.username,_that.password,_that.usernameRequiredError,_that.passwordRequiredError,_that.passwordTooShortError);case BiometricLoginRequested() when biometricLoginRequested != null:
 return biometricLoginRequested(_that.biometricReason);case LogoutRequested() when logoutRequested != null:
 return logoutRequested();case CheckAuthStatus() when checkAuthStatus != null:
 return checkAuthStatus();case _:
@@ -149,10 +149,10 @@ return checkAuthStatus();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String username,  String password)  loginRequested,required TResult Function( String biometricReason)  biometricLoginRequested,required TResult Function()  logoutRequested,required TResult Function()  checkAuthStatus,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String username,  String password,  String usernameRequiredError,  String passwordRequiredError,  String passwordTooShortError)  loginRequested,required TResult Function( String biometricReason)  biometricLoginRequested,required TResult Function()  logoutRequested,required TResult Function()  checkAuthStatus,}) {final _that = this;
 switch (_that) {
 case LoginRequested():
-return loginRequested(_that.username,_that.password);case BiometricLoginRequested():
+return loginRequested(_that.username,_that.password,_that.usernameRequiredError,_that.passwordRequiredError,_that.passwordTooShortError);case BiometricLoginRequested():
 return biometricLoginRequested(_that.biometricReason);case LogoutRequested():
 return logoutRequested();case CheckAuthStatus():
 return checkAuthStatus();}
@@ -169,10 +169,10 @@ return checkAuthStatus();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String username,  String password)?  loginRequested,TResult? Function( String biometricReason)?  biometricLoginRequested,TResult? Function()?  logoutRequested,TResult? Function()?  checkAuthStatus,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String username,  String password,  String usernameRequiredError,  String passwordRequiredError,  String passwordTooShortError)?  loginRequested,TResult? Function( String biometricReason)?  biometricLoginRequested,TResult? Function()?  logoutRequested,TResult? Function()?  checkAuthStatus,}) {final _that = this;
 switch (_that) {
 case LoginRequested() when loginRequested != null:
-return loginRequested(_that.username,_that.password);case BiometricLoginRequested() when biometricLoginRequested != null:
+return loginRequested(_that.username,_that.password,_that.usernameRequiredError,_that.passwordRequiredError,_that.passwordTooShortError);case BiometricLoginRequested() when biometricLoginRequested != null:
 return biometricLoginRequested(_that.biometricReason);case LogoutRequested() when logoutRequested != null:
 return logoutRequested();case CheckAuthStatus() when checkAuthStatus != null:
 return checkAuthStatus();case _:
@@ -187,11 +187,14 @@ return checkAuthStatus();case _:
 
 
 class LoginRequested implements AuthEvent {
-  const LoginRequested({required this.username, required this.password});
+  const LoginRequested({required this.username, required this.password, required this.usernameRequiredError, required this.passwordRequiredError, required this.passwordTooShortError});
   
 
  final  String username;
  final  String password;
+ final  String usernameRequiredError;
+ final  String passwordRequiredError;
+ final  String passwordTooShortError;
 
 /// Create a copy of AuthEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -203,16 +206,16 @@ $LoginRequestedCopyWith<LoginRequested> get copyWith => _$LoginRequestedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginRequested&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginRequested&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password)&&(identical(other.usernameRequiredError, usernameRequiredError) || other.usernameRequiredError == usernameRequiredError)&&(identical(other.passwordRequiredError, passwordRequiredError) || other.passwordRequiredError == passwordRequiredError)&&(identical(other.passwordTooShortError, passwordTooShortError) || other.passwordTooShortError == passwordTooShortError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,username,password);
+int get hashCode => Object.hash(runtimeType,username,password,usernameRequiredError,passwordRequiredError,passwordTooShortError);
 
 @override
 String toString() {
-  return 'AuthEvent.loginRequested(username: $username, password: $password)';
+  return 'AuthEvent.loginRequested(username: $username, password: $password, usernameRequiredError: $usernameRequiredError, passwordRequiredError: $passwordRequiredError, passwordTooShortError: $passwordTooShortError)';
 }
 
 
@@ -223,7 +226,7 @@ abstract mixin class $LoginRequestedCopyWith<$Res> implements $AuthEventCopyWith
   factory $LoginRequestedCopyWith(LoginRequested value, $Res Function(LoginRequested) _then) = _$LoginRequestedCopyWithImpl;
 @useResult
 $Res call({
- String username, String password
+ String username, String password, String usernameRequiredError, String passwordRequiredError, String passwordTooShortError
 });
 
 
@@ -240,10 +243,13 @@ class _$LoginRequestedCopyWithImpl<$Res>
 
 /// Create a copy of AuthEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? username = null,Object? password = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? username = null,Object? password = null,Object? usernameRequiredError = null,Object? passwordRequiredError = null,Object? passwordTooShortError = null,}) {
   return _then(LoginRequested(
 username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,usernameRequiredError: null == usernameRequiredError ? _self.usernameRequiredError : usernameRequiredError // ignore: cast_nullable_to_non_nullable
+as String,passwordRequiredError: null == passwordRequiredError ? _self.passwordRequiredError : passwordRequiredError // ignore: cast_nullable_to_non_nullable
+as String,passwordTooShortError: null == passwordTooShortError ? _self.passwordTooShortError : passwordTooShortError // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

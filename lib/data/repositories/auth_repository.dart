@@ -30,17 +30,13 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   UserModel? get currentUser => _currentUser;
 
-  AuthTokenModel _generateMockToken() {
+  Future<void> _persistSession(UserModel user) async {
     final now = DateTime.now();
-    return AuthTokenModel(
+    final token = AuthTokenModel(
       accessToken: 'access_${now.microsecondsSinceEpoch}',
       refreshToken: 'refresh_${now.microsecondsSinceEpoch}',
       expiresAt: now.add(const Duration(hours: 1)),
     );
-  }
-
-  Future<void> _persistSession(UserModel user) async {
-    final token = _generateMockToken();
     await _tokenStorageService.saveToken(token);
     await _tokenStorageService.saveUser(user);
   }
